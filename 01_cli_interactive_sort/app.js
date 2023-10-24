@@ -14,6 +14,7 @@ let answers = [];
 process.stdout.write(
   "Hello. Enter 10 words or digits deviding them in spaces: "
 );
+
 process.stdin.on("data", function (data) {
   answers.push(data.toString().trim());
 
@@ -23,8 +24,8 @@ process.stdin.on("data", function (data) {
     "How to sort input data? \n Select 1 - 6 and press ENTER  >  "
   );
 
-  const items = answers[0].split(" "); // perforn array into items
-  arrayData = items.filter((item) => item.trim() !== ""); // remove empty lines
+  const items = answers[0].split(" "); 
+  arrayData = items.filter((item) => item.trim() !== ""); 
   const words = arrayData.filter((item) => isNaN(item));
   const numbers = arrayData.filter((item) => !isNaN(item));
 
@@ -68,4 +69,8 @@ process.stdin.on("data", function (data) {
   if (answers.includes("exit")) {
     process.exit();
   }
+});
+
+process.on("exit", function () {
+  process.stdout.write("\n Good bye! Come back again!\n");
 });
