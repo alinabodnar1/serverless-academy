@@ -1,22 +1,29 @@
 import inquirer from "inquirer";
+// import { appendFileSync, readFileSync } from "fs";
 
 const questions = [
   {
-    type: 'input',
-    name: 'userName', // jsts
+    type: "input",
+    name: "userName",
     message: "Enter the user's name. To cancel press ENTER",
   },
   {
-    type: 'list',
-    name: 'gender',
+    type: "list",
+    name: "gender",
     message: "Choose your gender",
-    choices: ['male', 'female'],
+    choices: ["male", "female"],
   },
   {
-    type: 'input',
-    name: 'age',
+    type: "input",
+    name: "age",
     message: "Enter your age",
-  }
+  },
+  {
+    type: "confirm",
+    name: "checked",
+    message: "Would you search values in DB",
+    default: true,
+  },
 ];
 
 function ask() {
@@ -25,6 +32,14 @@ function ask() {
     .then((answers) => {
       // console.log(answers.userName, '\n');
       console.dir(answers, { colors: true });
+
+      // appendFileSync(
+      //   "./db.txt",
+      //   `Users: ${answers}`,
+      //   {flag: 'a'}
+      // );
+
+      const first = readFileSync("./content/first.txt", "utf-8");
     })
     .catch((error) => {
       if (error.isTtyError) {
@@ -38,3 +53,20 @@ function ask() {
 }
 
 ask();
+
+// const readline = require("readline");
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// function askQuestion() {
+//   rl.question("Enter your name: ", (rlAnswer) => {
+//     console.log(`Hello, ${rlAnswer}!`);
+//     // Ask the next question after the user presses Enter
+
+//     askQuestion();
+//   });
+// }
+
+// askQuestion();

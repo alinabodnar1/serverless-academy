@@ -1,5 +1,3 @@
-process.stdin.setEncoding("utf8");
-
 let questions = [
   "1 - Sort words alphabetically (A-Z)",
   "2 - Show numbers from lesser to greater",
@@ -9,68 +7,68 @@ let questions = [
   "6 - Display only unique values from the set of words and numbers entered by the user",
 ];
 
-let answers = [];
+const readline = require("readline");
 
-process.stdout.write(
-  "Hello. Enter 10 words or digits deviding them in spaces: "
-);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-process.stdin.on("data", function (data) {
-  answers.push(data.toString().trim());
+function ask() {
+  rl.question(
+    "Hello. Enter 10 words or digits deviding them in spaces: ",
+    (answers) => {
+      questions.forEach((question) => console.log(question));
 
-  questions.forEach((question) => console.log(question));
+      if (answers === "exit") exit();
 
-  process.stdout.write(
-    "How to sort input data? \n Select 1 - 6 and press ENTER  >  "
+      question(answers);
+    }
   );
+}
 
-  const items = answers[0].split(" "); 
-  arrayData = items.filter((item) => item.trim() !== ""); 
-  const words = arrayData.filter((item) => isNaN(item));
-  const numbers = arrayData.filter((item) => !isNaN(item));
+function question(answers) {
+  rl.question(
+    "How to sort input data? \n Select 1 - 6 and press ENTER ",
+    (userChoice) => {
+      const data = answers.split(" "); 
+      dataArray = data.filter((item) => item.trim() !== ""); 
 
-  // 1 - Sort words alphabetically (A-Z)
-  if (answers.includes("1")) {
-    console.log(words.sort());
-  }
+      const words = dataArray.filter((item) => isNaN(item));
+      const numbers = dataArray.filter((item) => !isNaN(item));
 
-  // 2 - Show numbers from lesser to greater
-  if (answers.includes("2")) {
-    console.log(numbers.sort((a, b) => a - b));
-  }
+      if (userChoice === "1") {
+        console.log("Sorted words:", words.sort());
+        ask();
+      } else if (userChoice === "2") {
+        console.log(numbers.sort((a, b) => a - b));
+        ask();
+      } else if (userChoice === "3") {
+        console.log(numbers.sort((a, b) => b - a));
+        ask();
+      } else if (userChoice === "4") {
+        console.log(words.sort((a, b) => a.length - b.length));
+        ask();
+      } else if (userChoice === "5") {
+        let uniqueWords = words.filter(
+          (word, index, array) => array.indexOf(word) === index
+        );
+        console.log(uniqueWords);
+        ask();
+      } else if (userChoice === "6") {
+        let uniqueValues = dataArray.filter(
+          (word, index, array) => array.indexOf(word) === index
+        );
+        console.log(uniqueValues);
+        ask();
+      } else if (userChoice === "exit") exit();
+    }
+  );
+}
 
-  // 3 - Show numbers from bigger to smaller
-  if (answers.includes("3")) {
-    console.log(numbers.sort((a, b) => b - a));
-  }
+function exit() {
+  console.log("\n Good bye! Come back again! \n ");
+  process.exit();
+}
 
-  // 4 - Display words in ascending order by number of letters in the word
-  if (answers.includes("4")) {
-    console.log(words.sort((a, b) => a.length - b.length));
-  }
-
-  // 5 - Show only unique words
-  if (answers.includes("5")) {
-    let uniqueWords = words.filter(
-      (word, index, array) => array.indexOf(word) === index
-    );
-    console.log(uniqueWords);
-  }
-
-  // 6 - Display only unique values from the set of words and numbers entered by the user
-  if (answers.includes("6")) {
-    let uniqueValues = arrayData.filter(
-      (word, index, array) => array.indexOf(word) === index
-    );
-    console.log(uniqueValues);
-  }
-
-  // exit the program
-  if (answers.includes("exit")) {
-    process.exit();
-  }
-});
-
-process.on("exit", function () {
-  process.stdout.write("\n Good bye! Come back again!\n");
-});
+ask();
