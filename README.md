@@ -1,8 +1,8 @@
-### Algorithms
+# Algorithms
 
 ## 01_cli_interactive_sort:  
 
-# The task should look like this:
+### The task should look like this:
 
 Wait for user’s input
 Ask what the user would like to see in the output - what operation to do with words and numbers, namely:
