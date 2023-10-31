@@ -1,4 +1,5 @@
 import inquirer from "inquirer";
+import fs from "fs";
 
 let users = [];
 
@@ -28,11 +29,12 @@ function tapEnter(users) {
     ])
 
     .then((choices) => {
-      console.log("choices:", choices);
       switch (choices.choice) {
         case "Yes":
-          console.log("USERS:", users);
+          console.log("Users inside choises:", users);
+          writeToDB(users);
           break;
+
         case "No":
           exit();
           break;
@@ -58,7 +60,6 @@ function firstQuestion() {
       }
 
       name = answers.userName;
-
       askNextQuestions(name);
     });
 }
@@ -87,3 +88,64 @@ function exit() {
 }
 
 firstQuestion();
+
+function writeToDB(users) {
+  let usersString = JSON.stringify(users);
+
+  fs.promises
+    .appendFile("./db.txt", usersString, "utf-8")
+    .catch((err) => console.log(err.message));
+
+  fs.promises.readFile("./db.txt", "utf-8").then((users) => {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "Enter the user's name you want to find in DB: ",
+        },
+      ])
+
+      .then((answers) => {
+        // let usersObject = JSON.parse(usersString);
+        console.log("--------------------------------");
+
+        const usersObj = JSON.parse(users);
+
+        console.log("usersObj:", usersObj);
+
+        const foundedName = usersObj.find(
+          user => user.userName === answers.name);
+            // console.log('user.userName:', user.userName);
+            // console.log('answers.name:', answers.name);
+
+            
+        console.log("foundedName:", foundedName);
+
+        if (foundedName != [] || foundedName != undefined || foundedName != null) {
+          return console.log(`User ${answers.name} was found`);
+        }
+        return console.log(`There is no User ${answers.name} in DB`);
+      });
+  });
+}
+
+// function findUser(users){
+//   inquirer
+//   .prompt([
+//     {
+//       type: "input",
+//       name: "userName",
+//       message: "Enter the user's name you want to find in DB: ",
+//     },
+//   ])
+
+//   .then((answers) => {
+//     if (answers.userName === "") {
+//       tapEnter(users);
+//       return;
+//     }
+
+//   });
+
+// }
