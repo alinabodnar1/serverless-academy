@@ -65,18 +65,13 @@ function firstQuestion() {
     ])
 
     .then((answers) => {
-      // console.log("answers:", answers);
-      // натиснули Enter
+
       if (answers.userName === "") {
         // show DB
         tapEnter();
         return;
       }
-      // if enter name = ask next questions
-      // firstQuestion();
-
       askNextQuestions();
-      return;
     });
 }
 
@@ -85,11 +80,4 @@ function exit() {
   process.exit();
 }
 
-// function exit() {
-//   console.log("\n Good bye! Come back again! \n ");
-//   process.exit();
-// }
-
-// askNextQuestions();
 firstQuestion();
-// askNextQuestions();
