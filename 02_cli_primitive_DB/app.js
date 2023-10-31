@@ -1,5 +1,7 @@
 import inquirer from "inquirer";
 
+let users = [];
+
 const questions = [
   {
     type: "list",
@@ -14,7 +16,7 @@ const questions = [
   },
 ];
 
-function tapEnter() {
+function tapEnter(users) {
   inquirer
     .prompt([
       {
@@ -29,7 +31,7 @@ function tapEnter() {
       console.log("choices:", choices);
       switch (choices.choice) {
         case "Yes":
-          console.log("show DB");
+          console.log("USERS:", users);
           break;
         case "No":
           exit();
@@ -37,24 +39,9 @@ function tapEnter() {
       }
     });
 }
-
-function askNextQuestions() {
-  inquirer
-    .prompt(questions)
-    .then((answers) => {
-      console.dir(answers, { colors: true });
-      firstQuestion();
-    })
-    .catch((error) => {
-      if (error.isTtyError) {
-        console.log(`Prompt couldn't be rendered in the current environment`);
-      } else {
-        console.log("Something else went wrong");
-      }
-    });
-}
-
 function firstQuestion() {
+  let name;
+
   inquirer
     .prompt([
       {
@@ -65,13 +52,32 @@ function firstQuestion() {
     ])
 
     .then((answers) => {
-
       if (answers.userName === "") {
-        // show DB
-        tapEnter();
+        tapEnter(users);
         return;
       }
-      askNextQuestions();
+
+      name = answers.userName;
+
+      askNextQuestions(name);
+    });
+}
+
+function askNextQuestions(name) {
+  inquirer
+    .prompt(questions)
+    .then((answers) => {
+      answers.userName = name;
+      users.push(answers);
+
+      firstQuestion();
+    })
+    .catch((error) => {
+      if (error.isTtyError) {
+        console.log(`Prompt couldn't be rendered in the current environment`);
+      } else {
+        console.log("Something else went wrong");
+      }
     });
 }
 
