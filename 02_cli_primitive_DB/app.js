@@ -1,12 +1,6 @@
 import inquirer from "inquirer";
-// import { appendFileSync, readFileSync } from "fs";
 
 const questions = [
-  {
-    type: "input",
-    name: "userName",
-    message: "Enter the user's name. To cancel press ENTER",
-  },
   {
     type: "list",
     name: "gender",
@@ -18,55 +12,84 @@ const questions = [
     name: "age",
     message: "Enter your age",
   },
-  {
-    type: "confirm",
-    name: "checked",
-    message: "Would you search values in DB",
-    default: true,
-  },
 ];
 
-function ask() {
+function tapEnter() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "choice",
+        message: "Would you search values in DB? ",
+        choices: ["Yes", "No"],
+      },
+    ])
+
+    .then((choices) => {
+      console.log("choices:", choices);
+      switch (choices.choice) {
+        case "Yes":
+          console.log("show DB");
+          break;
+        case "No":
+          exit();
+          break;
+      }
+    });
+}
+
+function askNextQuestions() {
   inquirer
     .prompt(questions)
     .then((answers) => {
-      // console.log(answers.userName, '\n');
       console.dir(answers, { colors: true });
-
-      // appendFileSync(
-      //   "./db.txt",
-      //   `Users: ${answers}`,
-      //   {flag: 'a'}
-      // );
-
-      const first = readFileSync("./content/first.txt", "utf-8");
+      firstQuestion();
     })
     .catch((error) => {
       if (error.isTtyError) {
-        // Prompt couldn't be rendered in the current environment
         console.log(`Prompt couldn't be rendered in the current environment`);
       } else {
-        // Something else went wrong
         console.log("Something else went wrong");
       }
     });
 }
 
-ask();
+function firstQuestion() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "userName",
+        message: "Enter the user's name. To cancel press ENTER ",
+      },
+    ])
 
-// const readline = require("readline");
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
+    .then((answers) => {
+      // console.log("answers:", answers);
+      // натиснули Enter
+      if (answers.userName === "") {
+        // show DB
+        tapEnter();
+        return;
+      }
+      // if enter name = ask next questions
+      // firstQuestion();
 
-// function askQuestion() {
-//   rl.question("Enter your name: ", (rlAnswer) => {
-//     console.log(`Hello, ${rlAnswer}!`);
-//     // Ask the next question after the user presses Enter
+      askNextQuestions();
+      return;
+    });
+}
 
-//     askQuestion();
-//   });
+function exit() {
+  console.log("\n Good bye! Come back again! \n ");
+  process.exit();
+}
+
+// function exit() {
+//   console.log("\n Good bye! Come back again! \n ");
+//   process.exit();
 // }
 
-// askQuestion();
+// askNextQuestions();
+firstQuestion();
+// askNextQuestions();
