@@ -14,6 +14,14 @@ const questions = [
     type: "input",
     name: "age",
     message: "Enter your age",
+    validate: function (value) {
+      const isValid = value < 100 && value !== "";
+      if (isValid) {
+        return true;
+      } else {
+        return "Please enter an age less 100";
+      }
+    },
   },
 ];
 
@@ -31,8 +39,8 @@ function tapEnter(users) {
     .then((choices) => {
       switch (choices.choice) {
         case "Yes":
-          console.log("Users inside choises:", users);
-          writeToDB(users);
+          console.log(users);
+          getUser(users);
           break;
 
         case "No":
@@ -89,14 +97,14 @@ function exit() {
 
 firstQuestion();
 
-function writeToDB(users) {
-  let usersString = JSON.stringify(users);
+function getUser(users) {
+  const usersString = JSON.stringify(users, null, 2);
 
   fs.promises
-    .appendFile("./db.txt", usersString, "utf-8")
+    .writeFile("./db.txt", usersString, "utf8")
     .catch((err) => console.log(err.message));
 
-  fs.promises.readFile("./db.txt", "utf-8").then((users) => {
+  fs.promises.readFile("./db.txt", "utf8").then((users) => {
     inquirer
       .prompt([
         {
@@ -107,45 +115,20 @@ function writeToDB(users) {
       ])
 
       .then((answers) => {
-        // let usersObject = JSON.parse(usersString);
-        console.log("--------------------------------");
+        const usersObj = JSON.parse(users, null, 2);
 
-        const usersObj = JSON.parse(users);
+        const wanted = usersObj.find(
+          (user) =>
+            user.userName === answers.name.toLowerCase() ||
+            user.userName === answers.name
+        );
 
-        console.log("usersObj:", usersObj);
-
-        const foundedName = usersObj.find(
-          user => user.userName === answers.name);
-            // console.log('user.userName:', user.userName);
-            // console.log('answers.name:', answers.name);
-
-            
-        console.log("foundedName:", foundedName);
-
-        if (foundedName != [] || foundedName != undefined || foundedName != null) {
-          return console.log(`User ${answers.name} was found`);
+        if (wanted) {
+          console.log(`User ${answers.name} was found: `);
+          console.log(wanted);
+        } else {
+          console.log("There is no such user in DB");
         }
-        return console.log(`There is no User ${answers.name} in DB`);
       });
   });
 }
-
-// function findUser(users){
-//   inquirer
-//   .prompt([
-//     {
-//       type: "input",
-//       name: "userName",
-//       message: "Enter the user's name you want to find in DB: ",
-//     },
-//   ])
-
-//   .then((answers) => {
-//     if (answers.userName === "") {
-//       tapEnter(users);
-//       return;
-//     }
-
-//   });
-
-// }

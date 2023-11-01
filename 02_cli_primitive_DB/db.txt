@@ -1,1 +1,17 @@
-[{"gender":"female","age":"12","userName":"aaa"},{"gender":"male","age":"23","userName":"ddd"},{"gender":"female","age":"34","userName":"hhh"}][{"gender":"male","age":"23","userName":"gfaewg"}]
+[
+  {
+    "gender": "male",
+    "age": "64",
+    "userName": "zzz"
+  },
+  {
+    "gender": "female",
+    "age": "32",
+    "userName": "xxx"
+  },
+  {
+    "gender": "female",
+    "age": "43",
+    "userName": "ccc"
+  }
+]
