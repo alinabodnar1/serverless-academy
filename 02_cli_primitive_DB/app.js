@@ -119,8 +119,8 @@ function getUser(users) {
 
         const wanted = usersObj.find(
           (user) =>
-            user.userName === answers.name.toLowerCase() ||
-            user.userName === answers.name
+            user.userName.toLowerCase() === answers.name.toLowerCase() 
+            // user.userName === answers.name
         );
 
         if (wanted) {
