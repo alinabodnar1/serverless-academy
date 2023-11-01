@@ -49,6 +49,7 @@ function tapEnter(users) {
       }
     });
 }
+
 function firstQuestion() {
   let name;
 
@@ -68,11 +69,11 @@ function firstQuestion() {
       }
 
       name = answers.userName;
-      askNextQuestions(name);
+      nextQuestions(name);
     });
 }
 
-function askNextQuestions(name) {
+function nextQuestions(name) {
   inquirer
     .prompt(questions)
     .then((answers) => {
@@ -104,31 +105,32 @@ function getUser(users) {
     .writeFile("./db.txt", usersString, "utf8")
     .catch((err) => console.log(err.message));
 
-  fs.promises.readFile("./db.txt", "utf8").then((users) => {
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "name",
-          message: "Enter the user's name you want to find in DB: ",
-        },
-      ])
+  fs.promises
+    .readFile("./db.txt", "utf8")
+    .then((users) => {
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "name",
+            message: "Enter the user's name you want to find in DB: ",
+          },
+        ])
 
-      .then((answers) => {
-        const usersObj = JSON.parse(users, null, 2);
+        .then((answers) => {
+          const usersObj = JSON.parse(users, null, 2);
 
-        const wanted = usersObj.find(
-          (user) =>
-            user.userName.toLowerCase() === answers.name.toLowerCase() 
-            // user.userName === answers.name
-        );
+          const wanted = usersObj.find(
+            (user) => user.userName.toLowerCase() === answers.name.toLowerCase()
+          );
 
-        if (wanted) {
-          console.log(`User ${answers.name} was found: `);
-          console.log(wanted);
-        } else {
-          console.log("There is no such user in DB");
-        }
-      });
-  });
+          if (wanted) {
+            console.log(`User ${answers.name} was found: `);
+            console.log(wanted);
+          } else {
+            console.log("There is no such user in DB");
+          }
+        });
+    })
+    .catch((err) => console.log(err.message));
 }
