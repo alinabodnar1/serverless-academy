@@ -4,61 +4,46 @@ process.stdin.setEncoding("utf8");
 
 require("dotenv").config();
 
+const chatID = process.env.chatID;
 const token = process.env.TOKEN;
 
 const bot = new TelegramBot(token, { polling: true });
-
-// // function sendMessage (message) {
-
-// //   bot.on("message", async (msg) => {
-// //     const chatID = msg.chat.id;
-
-// //     return bot.sendMessage(chatID, message);
-
-// //   });
-// // }
 
 program
   .version("11.1.0")
   .description("Command line to send messages and images to the Telegram Bot");
 
 program
-  .command("m <message>")
+  .command("message <message>")
+  .alias("m")
   .description("Send a message to the Telegram Bot")
-  .action((message) => {
-    bot.on("message", (msg) => {
-      const text = msg.text;
-
-      if (text === "/start") {
-        const chatID = msg.chat.id;
-
-        bot.sendMessage(chatID, message);
-
-        console.log("You successfully sent message to the bot!");
-      }
+  .action(async (message) => {
+    await bot.sendMessage(chatID, message).then(() => {
+      setTimeout(() => {
+        process.exit();
+      }, 1000);
     });
+    console.log("You successfully sent message to the bot!");
   });
 
 program
-  .command("p <photoPath>")
+  .command("photo <path>")
   .description("Send a photo to the Telegram Bot")
-  .action(() => {
-    bot.on("message", async (msg) => {
-      const chatId = msg.chat.id;
-      const args = process.argv.slice(2);
-      const photo = args[1];
-      const text = msg.text;
-
-      if (text === "/start") {
-        await bot.sendPhoto(chatId, photo);
-
-        console.log("You successfully sent photo to the bot!");
-
+  .alias("p")
+  .action(async (path) => {
+    await bot.sendPhoto(chatID, path).then(() => {
+      setTimeout(() => {
         process.exit();
-
-        return;
-      }
+      }, 1000);
     });
+    console.log("You successfully sent photo to the bot!");
+  });
+
+program
+  .command("--help")
+  .description("Show help")
+  .action(() => {
+    program.help();
   });
 
 program.parse(process.argv);
