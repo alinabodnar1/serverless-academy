@@ -2,5 +2,3 @@
 ### ✔ INTERACTIVE SORT
 ### ✔ PRIMITIVE DB
 ### ✔ TELEGRAM CONSOLE SENDER
-
-<!-- ![screen](/assets/screen.png) -->
