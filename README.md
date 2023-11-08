@@ -3,4 +3,4 @@
 ### ✔ PRIMITIVE DB
 ### ✔ TELEGRAM CONSOLE SENDER
 
-![screen](/assets/screen.png)
+<!-- ![screen](/assets/screen.png) -->
