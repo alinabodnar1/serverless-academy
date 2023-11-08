@@ -12,4 +12,4 @@ The result of this command is a photo sent to the Telegram bot from your PC. Onc
 
 ✔ The user can see the commands and their options using the help command or the --help argument.
 
- ![TB](/assets/TB.png) 
+ ![screen](/assets/screen.png)
